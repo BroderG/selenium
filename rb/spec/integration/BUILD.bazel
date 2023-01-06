@@ -1,4 +1,19 @@
-package(default_visibility = ["//:__subpackages__"])
+package(default_visibility = ["//rb:__subpackages__"])
+
+# rb_library(
+#     name = "integration",
+#     srcs = glob(["**/*.rb"]),
+#     deps = [
+#         "//rb/spec/integration/selenium/webdriver",
+#         "//rb/spec/integration/selenium/webdriver/bidi",
+#         "//rb/spec/integration/selenium/webdriver/chrome",
+#         "//rb/spec/integration/selenium/webdriver/edge",
+#         "//rb/spec/integration/selenium/webdriver/firefox",
+#         "//rb/spec/integration/selenium/webdriver/remote",
+#         "//rb/spec/integration/selenium/webdriver/safari",
+#         "//rb/spec/integration/selenium/webdriver/spec_support",
+#     ],
+# )
 
 BROWSERS = [
     "chrome",
