@@ -141,6 +141,7 @@ public class DriverService implements Closeable {
         exePath = SeleniumManager.getInstance().getDriverPath(exeName);
         checkExecutable(new File(exePath));
       } catch (Exception e) {
+        exePath = null;
         LOG.warning(String.format("Unable to obtain driver using Selenium Manager: %s", e.getMessage()));
       }
     }
@@ -213,6 +214,9 @@ public class DriverService implements Closeable {
       process.setEnvironmentVariables(environment);
       process.copyOutputTo(getOutputStream());
       process.executeAsync();
+      if (!process.waitForProcessStarted(timeout.toMillis(), TimeUnit.MILLISECONDS)) {
+        throw new WebDriverException("Timed out waiting for driver process to start.");
+      }
 
       CompletableFuture<StartOrDie> serverStarted = CompletableFuture.supplyAsync(() -> {
         waitUntilAvailable();
@@ -231,13 +235,15 @@ public class DriverService implements Closeable {
       try {
         StartOrDie status = (StartOrDie) CompletableFuture.anyOf(serverStarted, processFinished)
           .get(getTimeout().toMillis() * 2, TimeUnit.MILLISECONDS);
-        if (status == StartOrDie.SERVER_STARTED) {
-          processFinished.cancel(true);
-        } else {
-          if (status == StartOrDie.PROCESS_DIED) {
+        switch (status) {
+          case SERVER_STARTED:
+            processFinished.cancel(true);
+            break;
+          case PROCESS_DIED:
             process = null;
             throw new WebDriverException("Driver server process died prematurely.");
-          }
+          case PROCESS_IS_ACTIVE:
+            throw new WebDriverException("Timed out waiting for driver server to bind the port.");
         }
       } catch (ExecutionException | TimeoutException e) {
         throw new WebDriverException("Timed out waiting for driver server to start.", e);

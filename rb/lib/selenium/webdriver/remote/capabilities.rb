@@ -20,14 +20,12 @@
 module Selenium
   module WebDriver
     module Remote
-
       #
       # Specification of the desired and/or actual capabilities of the browser that the
       # server is being asked to create.
       #
 
       class Capabilities
-
         KNOWN = [
           :browser_name,
           :browser_version,
@@ -59,10 +57,25 @@ module Selenium
         # Backward compatibility
         #
 
-        alias_method :version, :browser_version
-        alias_method :version=, :browser_version=
-        alias_method :platform, :platform_name
-        alias_method :platform=, :platform_name=
+        def version
+          WebDriver.logger.deprecate('`Capabilities#version`', '`Capabilities#browser_version`', id: :jwp_caps)
+          browser_version
+        end
+
+        def version=(value)
+          WebDriver.logger.deprecate('`Capabilities#version=`', '`Capabilities#browser_version=`', id: :jwp_caps)
+          self.browser_version = value
+        end
+
+        def platform
+          WebDriver.logger.deprecate('`Capabilities#platform`', '`Capabilities#platform_name`', id: :jwp_caps)
+          platform_name
+        end
+
+        def platform=(value)
+          WebDriver.logger.deprecate('`Capabilities#platform=`', '`Capabilities#platform_name=`', id: :jwp_caps)
+          self.platform_name = value
+        end
 
         #
         # Convenience methods for the common choices.
@@ -80,18 +93,18 @@ module Selenium
               browser_name: 'MicrosoftEdge'
             }.merge(opts))
           end
-          alias_method :microsoftedge, :edge
+          alias microsoftedge edge
 
           def firefox(opts = {})
             new({
               browser_name: 'firefox'
             }.merge(opts))
           end
-          alias_method :ff, :firefox
+          alias ff firefox
 
           def safari(opts = {})
             new({
-              browser_name: Selenium::WebDriver::Safari.technology_preview? ? "Safari Technology Preview" : 'safari'
+              browser_name: Selenium::WebDriver::Safari.technology_preview? ? 'Safari Technology Preview' : 'safari'
             }.merge(opts))
           end
 
@@ -107,7 +120,7 @@ module Selenium
               platform_name: :windows
             }.merge(opts))
           end
-          alias_method :ie, :internet_explorer
+          alias ie internet_explorer
 
           def always_match(capabilities)
             new(always_match: capabilities)
@@ -134,7 +147,8 @@ module Selenium
 
             # Remote Server Specific
             if data.key?('webdriver.remote.sessionid')
-              caps[:remote_session_id] = data.delete('webdriver.remote.sessionid')
+              caps[:remote_session_id] =
+                data.delete('webdriver.remote.sessionid')
             end
 
             KNOWN.each do |cap|
@@ -269,7 +283,7 @@ module Selenium
           as_json == other.as_json
         end
 
-        alias_method :eql?, :==
+        alias eql? ==
 
         protected
 

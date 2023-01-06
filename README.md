@@ -4,6 +4,7 @@
 [![CI - Python](https://github.com/SeleniumHQ/selenium/actions/workflows/ci-python.yml/badge.svg)](https://github.com/SeleniumHQ/selenium/actions/workflows/ci-python.yml)
 [![CI - JavaScript](https://github.com/SeleniumHQ/selenium/actions/workflows/ci-javascript.yml/badge.svg)](https://github.com/SeleniumHQ/selenium/actions/workflows/ci-javascript.yml)
 [![CI - Java](https://github.com/SeleniumHQ/selenium/actions/workflows/ci-java.yml/badge.svg)](https://github.com/SeleniumHQ/selenium/actions/workflows/ci-java.yml)
+[![CI - .NET](https://github.com/SeleniumHQ/selenium/actions/workflows/ci-dotnet.yml/badge.svg)](https://github.com/SeleniumHQ/selenium/actions/workflows/ci-dotnet.yml)
 
 <a href="https://selenium.dev"><img src="https://selenium.dev/images/selenium_logo_square_green.png" width="180" alt="Selenium"/></a>
 
@@ -195,8 +196,8 @@ pip install bazel-bin/py/selenium-*.whl
 To publish run:
 
 ```sh
-bazel build //py:selenium-wheel
-twine upload bazel-bin/py/selenium-*.whl
+bazel build //py:selenium-wheel //py:selenium-sdist
+twine upload bazel-bin/py/selenium-*.whl bazel-bin/py/selenium-*.tar.gz
 ```
 </details>
 
@@ -267,6 +268,11 @@ Supported environment variables:
 - `CHROME_BINARY` - path to test specific Chrome browser
 - `EDGE_BINARY` - path to test specific Edge browser
 - `FIREFOX_BINARY` - path to test specific Firefox browser
+
+To run with a specific version of Ruby you can change the version in `rb/ruby_version.bzl` or from command line:
+```sh
+echo 'RUBY_VERSION = "<X.Y.Z>"' > rb/ruby_version.bzl
+```
 
 If you want to use RubyMine for development, a bit of extra configuration is necessary to let the IDE know about Bazel toolchain and artifacts:
 

@@ -148,6 +148,10 @@ public class NodeOptions {
     }
   }
 
+  public Optional<String> getDownloadsPath() {
+    return config.get(NODE_SECTION, "downloads-path");
+  }
+
   public Node getNode() {
     return config.getClass(NODE_SECTION, "implementation", Node.class, DEFAULT_NODE_IMPLEMENTATION);
   }
@@ -351,7 +355,10 @@ public class NodeOptions {
         int toIndex = (i + 1) >= configIndexes.length ? drivers.size() : configIndexes[i + 1];
         Map<String, String> configMap = new HashMap<>();
         drivers.subList(fromIndex, toIndex)
-          .forEach(keyValue -> configMap.put(keyValue.split("=")[0], keyValue.split("=")[1]));
+          .forEach(keyValue -> {
+            String [] values = keyValue.split("=", 2);
+            configMap.put(values[0], values[1]);
+          });
         driversMap.add(configMap);
       }
 
