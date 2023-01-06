@@ -329,9 +329,9 @@ pin_browsers()
 
 http_archive(
     name = "rules_ruby",
-    sha256 = "cdd1f9d13499a9d31cdb6cf067e0d70ccec5feeb304ba6a2a29c1d2493f9e0f6",
-    strip_prefix = "rules_ruby-ed1288b022085fabfde3b25a5909e4b27a323ec3",
-    url = "https://github.com/p0deje/rules_ruby/archive/ed1288b022085fabfde3b25a5909e4b27a323ec3.zip",
+    sha256 = "eb2b40adae409e82fa02619d26e08d68de50d55904cd9d3ab1ceffda74a6c1a3",
+    strip_prefix = "rules_ruby-3c2edd7b350838f0e4416c1a272ecc94e8051843",
+    url = "https://github.com/p0deje/rules_ruby/archive/3c2edd7b350838f0e4416c1a272ecc94e8051843.zip",
 )
 
 load("//rb:ruby_version.bzl", "RUBY_VERSION")
