@@ -42,7 +42,6 @@ rb_library(
             "driver_spec.rb",
             "devtools_spec.rb",
             "element_spec.rb",
-            "virtual_authenticator_spec.rb",
         ],
     )
 ]
