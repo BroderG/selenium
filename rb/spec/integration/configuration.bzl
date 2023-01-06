@@ -1,45 +1,37 @@
 ENV = select({
     "//rb/spec/integration:chrome": {
+        "WD_REMOTE_BROWSER": "chrome",
         "WD_SPEC_DRIVER": "chrome",
     },
     "//rb/spec/integration:edge": {
+        "WD_REMOTE_BROWSER": "edge",
         "WD_SPEC_DRIVER": "edge",
     },
     "//rb/spec/integration:firefox": {
+        "WD_REMOTE_BROWSER": "firefox",
         "WD_SPEC_DRIVER": "firefox",
     },
     "//rb/spec/integration:ie": {
+        "WD_REMOTE_BROWSER": "ie",
         "WD_SPEC_DRIVER": "ie",
     },
     "//rb/spec/integration:safari": {
+        "WD_REMOTE_BROWSER": "safari",
         "WD_SPEC_DRIVER": "safari",
     },
     "//rb/spec/integration:safari-preview": {
+        "WD_REMOTE_BROWSER": "Safari Technology Preview",
         "WD_SPEC_DRIVER": "safari-preview",
     },
-    "//rb/spec/integration:remote-chrome": {
-        "WD_REMOTE_BROWSER": "chrome",
+    "//conditions:default": {},
+}) | select({
+    "//rb/spec/integration:remote": {
         "WD_SPEC_DRIVER": "remote",
     },
-    "//rb/spec/integration:remote-edge": {
-        "WD_REMOTE_BROWSER": "edge",
-        "WD_SPEC_DRIVER": "remote",
-    },
-    "//rb/spec/integration:remote-firefox": {
-        "WD_REMOTE_BROWSER": "firefox",
-        "WD_SPEC_DRIVER": "remote",
-    },
-    "//rb/spec/integration:remote-ie": {
-        "WD_REMOTE_BROWSER": "ie",
-        "WD_SPEC_DRIVER": "remote",
-    },
-    "//rb/spec/integration:remote-safari": {
-        "WD_REMOTE_BROWSER": "safari",
-        "WD_SPEC_DRIVER": "remote",
-    },
-    "//rb/spec/integration:remote-safari-preview": {
-        "WD_REMOTE_BROWSER": "Safari Technology Preview",
-        "WD_SPEC_DRIVER": "remote",
+    "//conditions:default": {},
+}) | select({
+    "//rb/spec/integration:headless": {
+        "HEADLESS": "true",
     },
     "//conditions:default": {},
 })

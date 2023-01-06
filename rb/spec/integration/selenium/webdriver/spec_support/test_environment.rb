@@ -265,10 +265,6 @@ module Selenium
           WebDriver::Options.safari(**opts)
         end
 
-        def safari_preview_driver(**opts)
-          WebDriver::Driver.for(:safari, **opts)
-        end
-
         def random_port
           addr = Socket.getaddrinfo(Platform.localhost, 0, Socket::AF_INET, Socket::SOCK_STREAM)
           addr = Socket.pack_sockaddr_in(0, addr[0][3])

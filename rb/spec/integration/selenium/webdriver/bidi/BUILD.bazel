@@ -1,55 +1,25 @@
-load("@rules_ruby//ruby:defs.bzl", "rb_library", "rb_test")
+load("@rules_ruby//ruby:defs.bzl", "rb_test")
 load("//rb/spec/integration:configuration.bzl", "ENV", "TAGS")
 
-package(default_visibility = ["//:__subpackages__"])
-
-rb_library(
-    name = "spec_helper",
-    testonly = True,
-    srcs = glob([
-        "spec_helper.rb",
-        "spec_support.rb",
-        "spec_support/**/*",
-    ]),
-    data = select({
-        "//rb/spec/integration:remote": ["//java/src/org/openqa/selenium/grid:selenium_server_deploy.jar"],
-        "//conditions:default": [],
-    }),
-    deps = [
-        "//rb:common",
-        "//rb:remote",
-    ] + select({
-        "//rb/spec/integration:chrome": [
-            "//rb:bidi",
-            "//rb:chrome",
-            "//rb:devtools",
-        ],
-        "//rb/spec/integration:edge": [
-            "//rb:bidi",
-            "//rb:devtools",
-            "//rb:edge",
-        ],
-        "//rb/spec/integration:firefox": [
-            "//rb:bidi",
-            "//rb:devtools",
-            "//rb:firefox",
-        ],
-        "//rb/spec/integration:ie": ["//rb:ie"],
-        "//rb/spec/integration:safari": ["//rb:safari"],
-        "//conditions:default": [],
-    }),
-)
+package(default_visibility = ["//rb:__subpackages__"])
 
 [
     rb_test(
         name = file[:-8],
         srcs = [file],
-        args = ["rb/spec/integration/selenium/webdriver/" + file],
+        args = ["rb/spec/integration/selenium/webdriver/bidi/" + file],
+        data = select({
+            "//rb/spec/integration:remote": ["//java/src/org/openqa/selenium/grid:selenium_server_deploy.jar"],
+            "//conditions:default": [],
+        }),
         env = ENV,
         main = "@bundle//:bin/rspec",
         tags = TAGS,
         deps = [
-            ":spec_helper",
+            "//rb/lib/selenium/devtools",
+            "//rb/lib/selenium/webdriver:bidi",
+            "//rb/lib/selenium/webdriver:common",
+            "//rb/spec/integration/selenium/webdriver:spec_helper",
             "@bundle",
         ],
     )

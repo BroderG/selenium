@@ -1,15 +1,23 @@
 load("@rules_ruby//ruby:defs.bzl", "rb_test")
 load("//rb/spec/integration:configuration.bzl", "ENV", "TAGS")
 
+package(default_visibility = ["//rb:__subpackages__"])
+
 [
     rb_test(
         name = file[:-8],
         srcs = [file],
         args = ["rb/spec/integration/selenium/webdriver/remote/" + file],
+        data = select({
+            "//rb/spec/integration:remote": ["//java/src/org/openqa/selenium/grid:selenium_server_deploy.jar"],
+            "//conditions:default": [],
+        }),
         env = ENV,
         main = "@bundle//:bin/rspec",
         tags = TAGS,
         deps = [
+            "//rb/lib/selenium/webdriver:common",
+            "//rb/lib/selenium/webdriver:remote",
             "//rb/spec/integration/selenium/webdriver:spec_helper",
             "@bundle",
         ],

@@ -174,17 +174,20 @@ rb_binary(
 rb_binary(
     name = "lint",
     testonly = True,
-    srcs = glob(["spec/**/*.rb"]),
+    srcs = glob(["**/*.rb"]),
     args = [
         "--config=rb/.rubocop.yml",
-        "rb/spec",
+        "rb/",
     ],
     data = [".rubocop.yml"],
     main = "@bundle//:bin/rubocop",
+    tags = ["no-sandbox"],
     deps = [
         ":selenium-devtools",
         ":selenium-webdriver",
-        # "//rb/spec/integration",
+        "//rb/lib/selenium/devtools:cdp-generate",
+        "//rb/lib/selenium/support:nightly_version_generator",
+        "//rb/spec/integration",
         "//rb/spec/unit",
         "@bundle",
     ],

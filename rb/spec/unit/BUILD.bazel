@@ -8,6 +8,7 @@ rb_library(
     srcs = glob(["**/*.rb"]),
     deps = [
         "//rb/spec/unit/selenium:server",
+        "//rb/spec/unit/selenium/devtools:cdp_client_generator",
         "//rb/spec/unit/selenium/webdriver",
         "//rb/spec/unit/selenium/webdriver/chrome",
         "//rb/spec/unit/selenium/webdriver/common",
