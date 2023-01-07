@@ -115,16 +115,17 @@ jobs:
         with:
           edge-version: stable
       - name: Run tests
-        run: |
-          bazel test \
-            --cache_test_results=no \
-            --define browser=${{ matrix.browser }} \
-            --define remote=${{ matrix.remote }} \
-            --flaky_test_attempts 3 \
-            --local_test_jobs 1 \
-            //rb/spec/integration/...
+        run: >
+          bazel test
+          --cache_test_results=no
+          --define browser=${{ matrix.browser }}
+          --define remote=${{ matrix.remote }}
+          --flaky_test_attempts 3
+          --local_test_jobs 1
+          //rb/spec/integration/...
         env:
           DISPLAY: :99
+      - run: git diff
 
   docs:
     if: ${{ needs.check_workflow.outputs.result == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || contains(toJson(github.event.commits), '[run ruby]') == true }}
