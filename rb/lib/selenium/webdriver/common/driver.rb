@@ -320,7 +320,16 @@ module Selenium
           raise ArgumentError, msg
         end
 
-        options ? options.as_json : generate_capabilities(capabilities)
+        options ? options.as_json : deprecate_capabilities(capabilities)
+      end
+
+      def deprecate_capabilities(capabilities)
+        unless is_a?(Remote::Driver)
+          WebDriver.logger.deprecate("The :capabilities parameter for #{self.class}",
+                                     ":options argument with an instance of #{self.class}",
+                                     id: :capabilities)
+        end
+        generate_capabilities(capabilities)
       end
 
       def generate_capabilities(capabilities)

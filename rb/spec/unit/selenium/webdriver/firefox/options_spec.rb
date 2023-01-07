@@ -141,13 +141,27 @@ module Selenium
 
         describe '#add_option' do
           it 'adds an option with ordered pairs' do
-            options.add_option(:foo, 'bar')
+            expect {
+              options.add_option(:foo, 'bar')
+            }.to have_deprecated(:add_option)
             expect(options.instance_variable_get(:@options)[:foo]).to eq('bar')
           end
 
           it 'adds an option with Hash' do
-            options.add_option(foo: 'bar')
+            expect {
+              options.add_option(foo: 'bar')
+            }.to have_deprecated(:add_option)
             expect(options.instance_variable_get(:@options)[:foo]).to eq('bar')
+          end
+
+          it 'adds vendor namespaced options with ordered pairs' do
+            options.add_option('foo:bar', {bar: 'foo'})
+            expect(options.instance_variable_get(:@options)['foo:bar']).to eq({bar: 'foo'})
+          end
+
+          it 'adds vendor namespaced options with Hash' do
+            options.add_option('foo:bar' => {bar: 'foo'})
+            expect(options.instance_variable_get(:@options)['foo:bar']).to eq({bar: 'foo'})
           end
         end
 
@@ -197,13 +211,15 @@ module Selenium
           end
 
           it 'returns added options' do
-            options.add_option(:foo, 'bar')
+            expect {
+              options.add_option(:args, %w[foo bar])
+            }.to have_deprecated(:add_option)
             options.add_option('foo:bar', {foo: 'bar'})
             expect(options.as_json).to eq('acceptInsecureCerts' => true,
                                           'browserName' => 'firefox',
                                           'foo:bar' => {'foo' => 'bar'},
                                           'moz:debuggerAddress' => true,
-                                          'moz:firefoxOptions' => {'foo' => 'bar'})
+                                          'moz:firefoxOptions' => {'args' => %w[foo bar]})
           end
 
           it 'converts to a json hash' do
@@ -224,7 +240,6 @@ module Selenium
                                        binary: '/foo/bar',
                                        prefs: {foo: 'bar'},
                                        env: {'FOO' => 'bar'},
-                                       foo: 'bar',
                                        profile: profile,
                                        log_level: :debug,
                                        android_package: 'package',
@@ -253,7 +268,6 @@ module Selenium
                                                'env' => {'FOO' => 'bar'},
                                                'profile' => 'encoded_profile',
                                                'log' => {'level' => 'debug'},
-                                               'foo' => 'bar',
                                                'androidPackage' => 'package',
                                                'androidActivity' => 'activity',
                                                'androidDeviceSerial' => '123',

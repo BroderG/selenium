@@ -143,13 +143,27 @@ module Selenium
 
         describe '#add_option' do
           it 'adds an option with ordered pairs' do
-            options.add_option(:foo, 'bar')
+            expect {
+              options.add_option(:foo, 'bar')
+            }.to have_deprecated(:add_option)
             expect(options.instance_variable_get(:@options)[:foo]).to eq('bar')
           end
 
           it 'adds an option with Hash' do
-            options.add_option(foo: 'bar')
+            expect {
+              options.add_option(foo: 'bar')
+            }.to have_deprecated(:add_option)
             expect(options.instance_variable_get(:@options)[:foo]).to eq('bar')
+          end
+
+          it 'adds vendor namespaced options with ordered pairs' do
+            options.add_option('foo:bar', {bar: 'foo'})
+            expect(options.instance_variable_get(:@options)['foo:bar']).to eq({bar: 'foo'})
+          end
+
+          it 'adds vendor namespaced options with Hash' do
+            options.add_option('foo:bar' => {bar: 'foo'})
+            expect(options.instance_variable_get(:@options)['foo:bar']).to eq({bar: 'foo'})
           end
         end
 
@@ -204,23 +218,24 @@ module Selenium
             expect(options.as_json).to eq('browserName' => 'MicrosoftEdge', 'ms:edgeOptions' => {})
           end
 
-          it 'raises error when w3c is false' do
-            options.add_option(:w3c, false)
-            expect { options.as_json }.to raise_error(Error::InvalidArgumentError)
-          end
+          it 'errors when unrecognized capability is passed' do
+            expect {
+              options.add_option(:foo, 'bar')
+            }.to have_deprecated(:add_option)
 
-          it 'raises error when w3c is true' do
-            msg = /WARN Selenium \[:w3c\]/
-            options.add_option(:w3c, true)
-            expect { options.as_json }.to output(msg).to_stdout_from_any_process
+            expect {
+              options.as_json
+            }.to output(/WARN Selenium These options are not w3c compliant/).to_stdout_from_any_process
           end
 
           it 'returns added options' do
-            options.add_option(:foo, 'bar')
+            expect {
+              options.add_option(:detach, true)
+            }.to have_deprecated(:add_option)
             options.add_option('foo:bar', {foo: 'bar'})
             expect(options.as_json).to eq('browserName' => 'MicrosoftEdge',
                                           'foo:bar' => {'foo' => 'bar'},
-                                          'ms:edgeOptions' => {'foo' => 'bar'})
+                                          'ms:edgeOptions' => {'detach' => true})
           end
 
           it 'returns a JSON hash' do
@@ -246,7 +261,6 @@ module Selenium
                                        binary: '/foo/bar',
                                        extensions: ['foo.crx', 'bar.crx'],
                                        encoded_extensions: ['encoded_foobar'],
-                                       foo: 'bar',
                                        emulation: {device_name: :mine},
                                        local_state: {foo: 'bar'},
                                        detach: true,
@@ -279,7 +293,6 @@ module Selenium
                                                            'key_that_should_not_be_camelcased' => 'baz'},
                                                'binary' => '/foo/bar',
                                                'extensions' => %w[encoded_foobar encoded_foo encoded_bar],
-                                               'foo' => 'bar',
                                                'mobileEmulation' => {'deviceName' => 'mine'},
                                                'localState' => {'foo' => 'bar'},
                                                'detach' => true,
