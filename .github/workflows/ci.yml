@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - ci-merge # TODO: remove before merge
+      - trunk
+  schedule:
+    - cron: "0 */12 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    outputs:
+      targets: ${{ steps.check-targets.outputs.bazel-targets }}
+    steps:
+      - name: Checkout source tree
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 50
+      - name: Setup Bazel
+        uses: p0deje/setup-bazel@0.1.1
+        with:
+          bazelisk-cache: true
+          external-cache: |
+            crates: rust/Cargo.Bazel.lock
+            npm: package-lock.json
+            pypi__pip: py/requirements_lock.txt
+            rules_ruby_dist: rb/ruby_version.bzl
+          repository-cache: true
+      - name: Check Bazel targets
+        id: check-targets
+        run: ./scripts/github-actions/check-bazel-targets.sh
+        # TODO: (Alex) Extend to use before..after commits once this is merged
+
+  dotnet:
+    name: .NET
+    needs: check
+    uses: ./.github/workflows/ci-dotnet.yml
+    if: >
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      contains(needs.check.outputs.targets, '//dotnet') ||
+      contains(join(github.event.commits.*.message), '[dotnet]')
+
+  java:
+    name: Java
+    needs: check
+    uses: ./.github/workflows/ci-java.yml
+    if: >
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      contains(needs.check.outputs.targets, '//java') ||
+      contains(join(github.event.commits.*.message), '[java]')
+
+  javascript:
+    name: JavaScript
+    needs: check
+    uses: ./.github/workflows/ci-javascript.yml
+    if: >
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      contains(needs.check.outputs.targets, '//javascript') ||
+      contains(join(github.event.commits.*.message), '[js]')
+
+  python:
+    name: Python
+    needs: check
+    uses: ./.github/workflows/ci-python.yml
+    if: >
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      contains(needs.check.outputs.targets, '//py') ||
+      contains(join(github.event.commits.*.message), '[py]')
+
+  ruby:
+    name: Ruby
+    needs: check
+    uses: ./.github/workflows/ci-ruby.yml
+    if: >
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      contains(needs.check.outputs.targets, '//rb') ||
+      contains(join(github.event.commits.*.message), '[rb]')
