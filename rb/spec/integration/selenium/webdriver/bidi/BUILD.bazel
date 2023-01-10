@@ -7,20 +7,14 @@ package(default_visibility = ["//rb:__subpackages__"])
     rb_test(
         name = file[:-8],
         srcs = [file],
-        args = ["rb/spec/integration/selenium/webdriver/bidi/" + file],
-        data = select({
-            "//rb/spec/integration:remote": ["//java/src/org/openqa/selenium/grid:selenium_server_deploy.jar"],
-            "//conditions:default": [],
-        }),
+        args = ["rb/spec/"],
         env = ENV,
         main = "@bundle//:bin/rspec",
         tags = TAGS,
         deps = [
             "//rb/lib/selenium/devtools",
             "//rb/lib/selenium/webdriver:bidi",
-            "//rb/lib/selenium/webdriver:common",
             "//rb/spec/integration/selenium/webdriver:spec_helper",
-            "@bundle",
         ],
     )
     for file in glob(["*_spec.rb"])

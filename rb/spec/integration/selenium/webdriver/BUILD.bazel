@@ -19,20 +19,20 @@ rb_library(
         "//rb/spec/integration:remote": ["//java/src/org/openqa/selenium/grid:selenium_server_deploy.jar"],
         "//conditions:default": [],
     }),
+    deps = ["@bundle"],
 )
 
 [
     rb_test(
         name = file[:-8],
         srcs = [file],
-        args = ["rb/spec/integration/selenium/webdriver/" + file],
+        args = ["rb/spec/"],
         env = ENV,
         main = "@bundle//:bin/rspec",
         tags = TAGS,
         deps = [
             ":spec_helper",
             "//rb/lib/selenium/webdriver:common",
-            "@bundle",
         ],
     )
     for file in glob(
@@ -50,10 +50,6 @@ rb_test(
     name = "bidi",
     srcs = ["bidi_spec.rb"],
     args = ["rb/spec/"],
-    data = select({
-        "//rb/spec/integration:remote": ["//java/src/org/openqa/selenium/grid:selenium_server_deploy.jar"],
-        "//conditions:default": [],
-    }),
     env = ENV,
     main = "@bundle//:bin/rspec",
     tags = TAGS,
@@ -61,8 +57,6 @@ rb_test(
         ":spec_helper",
         "//rb/lib/selenium/devtools",
         "//rb/lib/selenium/webdriver:bidi",
-        "//rb/lib/selenium/webdriver:common",
-        "@bundle",
     ],
 )
 
@@ -70,10 +64,6 @@ rb_test(
     name = "devtools",
     srcs = ["devtools_spec.rb"],
     args = ["rb/spec/"],
-    data = select({
-        "//rb/spec/integration:remote": ["//java/src/org/openqa/selenium/grid:selenium_server_deploy.jar"],
-        "//conditions:default": [],
-    }),
     env = ENV,
     main = "@bundle//:bin/rspec",
     tags = TAGS,
@@ -81,8 +71,6 @@ rb_test(
         ":spec_helper",
         "//rb/lib/selenium/devtools",
         "//rb/lib/selenium/webdriver:bidi",
-        "//rb/lib/selenium/webdriver:common",
-        "@bundle",
     ],
 )
 
@@ -90,24 +78,17 @@ rb_test(
     name = "driver",
     srcs = ["driver_spec.rb"],
     args = ["rb/spec/"],
-    data = select({
-        "//rb/spec/integration:remote": ["//java/src/org/openqa/selenium/grid:selenium_server_deploy.jar"],
-        "//conditions:default": [],
-    }),
     env = ENV,
     main = "@bundle//:bin/rspec",
     tags = TAGS,
     deps = [
         ":spec_helper",
         "//rb/lib/selenium/webdriver:chrome",
-        "//rb/lib/selenium/webdriver:chromium",
-        "//rb/lib/selenium/webdriver:common",
         "//rb/lib/selenium/webdriver:edge",
         "//rb/lib/selenium/webdriver:firefox",
         "//rb/lib/selenium/webdriver:ie",
         "//rb/lib/selenium/webdriver:remote",
         "//rb/lib/selenium/webdriver:safari",
-        "@bundle",
     ],
 )
 
@@ -115,23 +96,16 @@ rb_test(
     name = "element",
     srcs = ["element_spec.rb"],
     args = ["rb/spec/"],
-    data = select({
-        "//rb/spec/integration:remote": ["//java/src/org/openqa/selenium/grid:selenium_server_deploy.jar"],
-        "//conditions:default": [],
-    }),
     env = ENV,
     main = "@bundle//:bin/rspec",
     tags = TAGS,
     deps = [
         ":spec_helper",
         "//rb/lib/selenium/webdriver:chrome",
-        "//rb/lib/selenium/webdriver:chromium",
-        "//rb/lib/selenium/webdriver:common",
         "//rb/lib/selenium/webdriver:edge",
         "//rb/lib/selenium/webdriver:firefox",
         "//rb/lib/selenium/webdriver:ie",
         "//rb/lib/selenium/webdriver:remote",
         "//rb/lib/selenium/webdriver:safari",
-        "@bundle",
     ],
 )
