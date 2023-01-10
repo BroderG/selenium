@@ -107,4 +107,4 @@ jobs:
       name: RC Tests
       browser: firefox
       cache-key: java-rc-tests
-      run: bazel test --test_tag_filters "rc" --flaky_test_attempts 3 //java/..
+      run: bazel test --test_tag_filters "rc" --flaky_test_attempts 3 //java/...
