@@ -39,6 +39,7 @@ jobs:
       name: Integration Tests (${{ matrix.driver }}, ${{ matrix.framework }})
       browser: ${{ matrix.browser }}
       cache-key: dotnet-${{ matrix.browser }}-${{ matrix.framework }}
+      java-version: 11
       os: windows
       run: |
         bazel build //dotnet/test/common:${{ matrix.browser }}

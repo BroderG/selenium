@@ -31,6 +31,11 @@ on:
         required: false
         type: string
         default: ''
+      java-version:
+        description: Custom Java version to install
+        required: false
+        type: string
+        default: ''
       ruby-version:
         description: Custom Ruby version to use
         required: false
@@ -47,6 +52,12 @@ jobs:
       - name: Set Ruby version
         if: inputs.ruby-version != ''
         run: echo 'RUBY_VERSION = "${{ inputs.ruby-version }}"' > rb/ruby_version.bzl
+      - name: Setup Java
+        if: inputs.java-version != ''
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ inputs.java-version }}
+          distribution: 'temurin'
       - name: Setup Bazel
         uses: p0deje/setup-bazel@0.1.1
         with:
