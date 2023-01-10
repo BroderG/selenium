@@ -202,3 +202,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Run unit tests
         run: bazel test --cache_test_results=no //rb/spec/unit/...
+      - if: failure() && runner.debug == '1'
+        uses: mxschmitt/action-tmate@v3
