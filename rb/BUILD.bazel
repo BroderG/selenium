@@ -90,7 +90,7 @@ rb_gem_build(
 
 rb_gem_push(
     name = "selenium-webdriver-release",
-    src = ":selenium-webdriver",
+    gem = ":selenium-webdriver",
 )
 
 rb_gem_build(
@@ -111,7 +111,7 @@ rb_gem_build(
 
 rb_gem_push(
     name = "selenium-devtools-release",
-    src = ":selenium-devtools",
+    gem = ":selenium-devtools",
 )
 
 rb_binary(
@@ -128,11 +128,11 @@ rb_binary(
 
 rb_gem_push(
     name = "selenium-webdriver-release-nightly",
-    src = ":selenium-webdriver",
     args = [
         "--host",
         GITHUB_PACKAGES_HOST,
     ],
+    gem = ":selenium-webdriver",
 )
 
 rb_binary(
@@ -149,11 +149,11 @@ rb_binary(
 
 rb_gem_push(
     name = "selenium-devtools-release-nightly",
-    src = ":selenium-devtools",
     args = [
         "--host",
         GITHUB_PACKAGES_HOST,
     ],
+    gem = ":selenium-devtools",
 )
 
 rb_binary(
