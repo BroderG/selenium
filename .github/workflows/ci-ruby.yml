@@ -56,8 +56,8 @@ jobs:
       ruby-version: ${{ matrix.ruby-version }}
       run: bazel test --cache_test_results=no --test_output=all //rb:unit-test
 
-  integration-tests:
-    name: Integration Tests
+  integration-tests-local:
+    name: Integration Tests (Local)
     needs: unit-tests
     uses: ./.github/workflows/bazel.yml
     strategy:
@@ -74,11 +74,32 @@ jobs:
           - browser: edge
             os: ubuntu
     with:
-      name: Integration Tests (${{ matrix.browser }}, ${{ matrix.os }})
+      name: Integration Tests (Local) (${{ matrix.browser }}, ${{ matrix.os }})
       browser: ${{ matrix.browser }}
-      cache-key: rb-remote-${{ matrix.browser }}-test
+      cache-key: rb-${{ matrix.browser }}-test
       os: ${{ matrix.os }}
-      run: >
-        bazel test --cache_test_results=no --test_output=all
-        //rb:${{ matrix.browser }}-test
-        //rb:remote-${{ matrix.browser }}-test
+      run: bazel test --cache_test_results=no --test_output=all //rb:${{ matrix.browser }}-test
+
+  integration-tests-remote:
+    name: Integration Tests (Remote)
+    needs: integration-tests-local
+    uses: ./.github/workflows/bazel.yml
+    strategy:
+      fail-fast: false
+      matrix:
+        browser:
+          - chrome
+          - edge
+          - firefox
+        os:
+          - ubuntu
+          - windows
+        exclude:
+          - browser: edge
+            os: ubuntu
+    with:
+      name: Integration Tests (Remote) (${{ matrix.browser }}, ${{ matrix.os }})
+      browser: ${{ matrix.browser }}
+      cache-key: rb-${{ matrix.browser }}-test
+      os: ${{ matrix.os }}
+      run: bazel test --cache_test_results=no --test_output=all //rb:remote-${{ matrix.browser }}-test

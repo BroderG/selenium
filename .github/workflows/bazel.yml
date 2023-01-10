@@ -99,3 +99,6 @@ jobs:
         run: ${{ inputs.run }}
         env:
           SELENIUM_BROWSER: ${{ inputs.browser }}
+      - name: Start SSH session
+        if: failure() && runner.debug == '1'
+        uses: mxschmitt/action-tmate@v3
