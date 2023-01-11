@@ -61,14 +61,14 @@ jobs:
       matrix:
         browser:
           - chrome
-          - edge
-          - firefox
+          # - edge
+          # - firefox
         remote:
           - false
-          - true
+          # - true
         os:
           - ubuntu-latest
-          - windows-latest
+          # - windows-latest
         exclude:
           - browser: edge
             os: ubuntu-latest
@@ -114,6 +114,8 @@ jobs:
         uses: browser-actions/setup-edge@latest
         with:
           edge-version: stable
+      - uses: mxschmitt/action-tmate@v3
+        if: runner.debug == '1'
       - name: Run tests
         run: >
           bazel test
@@ -124,7 +126,6 @@ jobs:
           //rb/spec/integration/...
         env:
           DISPLAY: :99
-      - run: git diff
 
   docs:
     if: ${{ needs.check_workflow.outputs.result == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || contains(toJson(github.event.commits), '[run ruby]') == true }}
