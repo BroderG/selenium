@@ -117,7 +117,6 @@ jobs:
       - name: Run tests
         run: >
           bazel test
-          --cache_test_results=no
           --define browser=${{ matrix.browser }}
           --define remote=${{ matrix.remote }}
           --flaky_test_attempts 3
@@ -201,6 +200,4 @@ jobs:
           repository-cache: true
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Run unit tests
-        run: bazel test --cache_test_results=no //rb/spec/unit/...
-      - if: failure() && runner.debug == '1'
-        uses: mxschmitt/action-tmate@v3
+        run: bazel test //rb/spec/unit/...
