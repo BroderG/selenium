@@ -6,13 +6,12 @@ package(default_visibility = ["//rb:__subpackages__"])
     rb_test(
         name = file[:-8],
         srcs = [file],
-        args = ["rb/spec/unit/selenium/webdriver/firefox/" + file],
+        args = ["rb/spec/"],
         main = "@bundle//:bin/rspec",
+        tags = ["no-sandbox"],
         deps = [
-            "//rb/lib/selenium/webdriver:common",
             "//rb/lib/selenium/webdriver:firefox",
             "//rb/spec/unit/selenium/webdriver:spec_helper",
-            "@bundle",
         ],
     )
     for file in glob(["*_spec.rb"])

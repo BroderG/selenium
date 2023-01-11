@@ -7,6 +7,7 @@ rb_test(
     srcs = ["server_spec.rb"],
     args = ["rb/spec/"],
     main = "@bundle//:bin/rspec",
+    tags = ["no-sandbox"],
     deps = [
         "//rb/lib/selenium:server",
         "@bundle",
